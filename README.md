@@ -1,8 +1,6 @@
 # Attractors 2023
 
 
-<div align="center">
-
 <img src="https://raw.githubusercontent.com/jobar8/attractors2023/master/docs/assets/images/panel_screenshot.png" alt="Attractors Panel" width="800" role="img">
 -----
 
@@ -59,11 +57,22 @@ Note: The dependencies are not compatible with Python 3.12.
 
 ## Usage
 
-The app can be launched with:
+Two `panel` webapps or "dashboards" are available. The first one is the updated version of `attractors_panel` and it can be launched with:
 
 ```console
 panel serve --show src/attractors2023/attractors_panel.py
 ```
+
+It should work just like the original one.
+
+The second dashboard is very similar, except for the presence of the two X and Y coordinates sliders (and the absence of the "player"). Run it with:
+
+```console
+panel serve --show src/attractors2023/attractors_explorer.py
+```
+
+The X and Y sliders allow you to limit the display of the attractor to a particular area. 
+
 
 ## License
 
