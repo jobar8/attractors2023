@@ -1,4 +1,5 @@
 """Test functions for the attractors.py module."""
+import pandas as pd
 import pytest
 
 import attractors2023.attractors as at
@@ -15,7 +16,18 @@ def test_attractor():
     assert fd.colormap == 'kgy'
     assert fd.equations[0] == '$x_{n+1} = \\sin\\ by_n + c\\ \\sin\\ bx_n$'
     assert fd.fn(1, 2, 3, 4, 5, 6) == pytest.approx((-2.7946542299162593, -1.535372981133688))
-    assert fd(n=5, x=1, y=2) == 1
+
+    points = fd(n=5, x=1, y=2)
+    assert isinstance(points, pd.DataFrame)
+    assert points.shape == (5, 2)
+
+
+def test_attractor_compute():
+    """Test the compute() method of the Attractor class."""
+    fd = at.FractalDream()
+    all_points = fd.compute(n_points=10)
+    assert len(all_points) == 4  # n_origins=4
+    assert isinstance(all_points[0], pd.DataFrame)
 
 
 def test_parametersets():
