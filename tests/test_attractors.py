@@ -15,6 +15,7 @@ def test_attractor():
     assert fd.colormap == 'kgy'
     assert fd.equations[0] == '$x_{n+1} = \\sin\\ by_n + c\\ \\sin\\ bx_n$'
     assert fd.fn(1, 2, 3, 4, 5, 6) == pytest.approx((-2.7946542299162593, -1.535372981133688))
+    assert fd(n=5, x=1, y=2) == 1
 
 
 def test_parametersets():
