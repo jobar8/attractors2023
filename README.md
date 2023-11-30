@@ -1,8 +1,5 @@
 # Attractors 2023
 
-
-<div align="center">
-
 <img src="https://raw.githubusercontent.com/jobar8/attractors2023/master/docs/assets/images/panel_screenshot.png" alt="Attractors Panel" width="800" role="img">
 -----
 
