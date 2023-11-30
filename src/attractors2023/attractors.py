@@ -32,7 +32,7 @@ from numba import jit
 from numpy import cos, fabs, sin, sqrt
 from param import concrete_descendents
 
-from attractors2023.maths import trajectory
+from attractors2023.maths import compute_multiple, trajectory
 
 RNG = np.random.default_rng(12)
 
@@ -73,6 +73,17 @@ class Attractor(param.Parameterized):
             self.y = y
         args = [getattr(self, p) for p in self.signature()]
         return trajectory(self.fn, *args, n=n)
+
+    def compute(self, xlim=(-2, 2), ylim=(-2, 2), n_points=1000000):
+        """Return a dataframe with *n* points"""
+        args = [getattr(self, p) for p in self.signature()]
+        global partial_fn  # hack to ensure multiprocessing works
+
+        def partial_fn(x, y):
+            """Partial version of attractor equation with only (x,y) arguments."""
+            return self.fn(x, y, *args[2:])
+
+        return compute_multiple(partial_fn, xlim, ylim, n_points=n_points, n_origins=4, nprocs=8)
 
     def vals(self):
         return [self.__class__.name] + [self.colormap] + [getattr(self, p) for p in self.signature()]
