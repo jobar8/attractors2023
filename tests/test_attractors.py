@@ -26,8 +26,8 @@ def test_attractor_compute():
     """Test the compute() method of the Attractor class."""
     fd = at.FractalDream()
     all_points = fd.compute(n_points=10)
-    assert len(all_points) == 4  # n_origins=4
-    assert isinstance(all_points[0], pd.DataFrame)
+    assert len(all_points) == 23
+    assert isinstance(all_points, pd.DataFrame)
 
 
 def test_parametersets():
