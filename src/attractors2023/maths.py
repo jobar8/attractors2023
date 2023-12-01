@@ -67,7 +67,7 @@ def compute_multiple(
     n_points: int,
     n_origins: int = 24,
     nprocs: int = 8,
-):
+) -> list[pd.DataFrame]:
     """Create image of the attractor's trajectory limited to a given region."""
     xmin, xmax = xlim
     ymin, ymax = ylim

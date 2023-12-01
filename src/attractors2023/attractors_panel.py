@@ -47,7 +47,7 @@ class AttractorsViewer(param.Parameterized):
 
     @param.depends('parameters.param', watch=True)
     def _update_from_parameters(self):
-        a = params.attractor(*self.parameters())
+        a = params.get_attractor(*self.parameters())
         if a is not self.attractor_type:
             self.param.update(attractor_type=a)
 
@@ -65,7 +65,7 @@ class AttractorsViewer(param.Parameterized):
         )
 
 
-ats = AttractorsViewer(name='Options2')
+ats = AttractorsViewer(name='Viewer')
 params.current = lambda: ats.attractor_type
 player = DiscretePlayer(options=params.param.example.objects, interval=2000, align='center')
 player.link(params, value='example')

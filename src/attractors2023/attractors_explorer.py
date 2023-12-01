@@ -80,14 +80,14 @@ class AttractorsExplorer(param.Parameterized):
 
     @param.depends('parameters.param', watch=True)
     def _update_from_parameters(self):
-        a = params.attractor(*self.parameters())
+        a = params.get_attractor(*self.parameters())
         if a is not self.attractor_type:
             self.param.update(attractor_type=a)
 
     @param.depends('attractor_type.param', 'plot_type', 'n_points', 'xlim', 'ylim')
     def view(self):
         all_dfs = self.attractor_type.compute(xlim=self.xlim, ylim=self.ylim, n_points=self.n_points)
-        return render_attractor(pd.concat(all_dfs), self.plot_type, palette[self.attractor_type.colormap][::-1])  # type: ignore
+        return render_attractor(, self.plot_type, palette[self.attractor_type.colormap][::-1])  # type: ignore
 
     @param.depends('attractor_type')
     def equations(self):

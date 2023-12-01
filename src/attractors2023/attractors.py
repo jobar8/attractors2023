@@ -78,16 +78,17 @@ class Attractor(param.Parameterized):
 
     def compute(
         self, xlim: tuple[float, float] = (-2, 2), ylim: tuple[float, float] = (-2, 2), n_points: int = 1000000
-    ) -> list[pd.DataFrame]:
+    ) -> pd.DataFrame:
         """Return a list of dataframes with *n* points"""
         args = [getattr(self, p) for p in self.signature()]
         global partial_fn  # hack to ensure multiprocessing works
 
-        def partial_fn(x:ArrayLike, y:ArrayLike) -> NDArray:
+        def partial_fn(x: ArrayLike, y: ArrayLike) -> NDArray:
             """Partial version of attractor equation with only (x,y) arguments."""
             return self.fn(x, y, *args[2:])
 
-        return compute_multiple(partial_fn, xlim, ylim, n_points=n_points, n_origins=4, nprocs=8)
+        all_dfs = compute_multiple(partial_fn, xlim, ylim, n_points=n_points, n_origins=4, nprocs=8)
+        return pd.concat(all_dfs)
 
     def vals(self):
         return [self.__class__.name] + [self.colormap] + [getattr(self, p) for p in self.signature()]
@@ -267,17 +268,19 @@ class ParameterSets(param.Parameterized):
 
         self._load()
 
-        self.attractors:dict[str,Attractor] = {k: v(name=f'{k} parameters') for k, v in sorted(concrete_descendents(Attractor).items())}
+        self.attractors: dict[str, Attractor] = {
+            k: v(name=f'{k} parameters') for k, v in sorted(concrete_descendents(Attractor).items())
+        }
         # load first set of parameters for each kind of attractors
         for k in self.attractors:
-            self.attractor(k, *self.args(k)[0])
+            self.get_attractor(k, *self.args(k)[0])
 
     def _load(self):
         with Path(self.data_folder / self.input_examples_filename).open('r') as f:
             vals = yaml.safe_load(f)
-            assert vals and len(vals) > 0
-            self.param.example.objects[:] = vals
-            self.example = vals[0]
+            if len(vals) > 0:
+                self.param.example.objects[:] = vals
+                self.example = vals[0]
 
     def _save(self):
         if self.output_examples_filename == self.param.input_examples_filename.default:
@@ -306,7 +309,7 @@ class ParameterSets(param.Parameterized):
     def args(self, name):
         return [v[1:] for v in self.param.example.objects if v[0] == name]
 
-    def attractor(self, name:str, *args) -> Attractor:
+    def get_attractor(self, name: str, *args) -> Attractor:
         """Factory function to return an Attractor object with the given name and arg values."""
         attractor = self.attractors[name]
         fn_params = ['colormap', *attractor.signature()]
