@@ -22,7 +22,7 @@ def trajectory_coords(fn, x0, y0, a, b, c, d, e, f, n) -> tuple[NDArray[np.float
     return x, y
 
 
-def trajectory(fn, x0, y0, a, b=None, c=None, d=None, e=None, f=None, n=1000000):
+def trajectory(fn, x0, y0, a, b=None, c=None, d=None, e=None, f=None, n=1000000) -> pd.DataFrame:
     """
     Given an attractor fn with up to six parameters a-e, compute n trajectory points
     (starting from x0,y0) and return as a Pandas dataframe with columns x,y.

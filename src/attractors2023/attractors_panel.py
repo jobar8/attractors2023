@@ -10,6 +10,7 @@ Also available online for comparison at https://attractors.pyviz.demo.anaconda.c
 """
 
 import datashader as ds
+import pandas as pd
 import panel as pn
 import param
 from colorcet import palette
@@ -28,7 +29,7 @@ palette['inferno'] = inferno
 params = at.ParameterSets(name='Attractors')
 
 
-def datashade(df, plot_type='points', cmap=palette['inferno'], size=700):
+def datashade(df: pd.DataFrame, plot_type: str = 'points', cmap: list = palette['inferno'], size: int = 700):
     cvs = ds.Canvas(plot_width=size, plot_height=size)
     agg = getattr(cvs, plot_type)(df, 'x', 'y', agg=ds.count())
     return tf.shade(agg, cmap=cmap)
