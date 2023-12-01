@@ -8,6 +8,8 @@ The app can be launched with:
 
 Also available online for comparison at https://attractors.pyviz.demo.anaconda.com/attractors_panel
 """
+from typing import Generator
+
 import datashader as ds
 import numpy as np
 import pandas as pd
@@ -31,24 +33,13 @@ palette['inferno'] = inferno
 params = at.ParameterSets(name='Attractors')
 
 
-def datashade(df, plot_type='points', cmap=palette['inferno'], size=700):
-    cvs = ds.Canvas(plot_width=size, plot_height=size)
-    agg = getattr(cvs, plot_type)(df, 'x', 'y', agg=ds.count())
-    return tf.shade(agg, cmap=cmap)
-
-
 def render_attractor(
     trajectory: pd.DataFrame, plot_type: str = 'points', cmap: list = palette['inferno'], size: int = 700
-):
+) -> Generator:
     """Render attractor's trajectory into an image using datashader."""
     cvs = ds.Canvas(plot_width=size, plot_height=size)
     agg = getattr(cvs, plot_type)(trajectory, 'x', 'y', agg=ds.count())
     yield tf.shade(agg, cmap=cmap)
-
-
-def generate_image(all_dfs, plot_type: str = 'points', cmap: list = palette['inferno']):
-    """Create image of the attractor's trajectory limited to a given region."""
-    return render_attractor(pd.concat(all_dfs), plot_type=plot_type, cmap=cmap)
 
 
 class AttractorsExplorer(param.Parameterized):
@@ -86,8 +77,8 @@ class AttractorsExplorer(param.Parameterized):
 
     @param.depends('attractor_type.param', 'plot_type', 'n_points', 'xlim', 'ylim')
     def view(self):
-        all_dfs = self.attractor_type.compute(xlim=self.xlim, ylim=self.ylim, n_points=self.n_points)
-        return render_attractor(, self.plot_type, palette[self.attractor_type.colormap][::-1])  # type: ignore
+        all_points = self.attractor_type.compute(xlim=self.xlim, ylim=self.ylim, n_points=self.n_points)
+        return render_attractor(all_points, self.plot_type, palette[self.attractor_type.colormap][::-1])  # type: ignore
 
     @param.depends('attractor_type')
     def equations(self):
