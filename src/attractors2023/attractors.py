@@ -26,10 +26,12 @@ import inspect
 from pathlib import Path
 
 import numpy as np
+import pandas as pd
 import param
 import yaml
 from numba import jit
 from numpy import cos, fabs, sin, sqrt
+from numpy.typing import ArrayLike, NDArray
 from param import concrete_descendents
 
 from attractors2023.maths import compute_multiple, trajectory
@@ -38,7 +40,7 @@ RNG = np.random.default_rng(12)
 
 
 class Attractor(param.Parameterized):
-    """Base class for a Parameterized object that can evaluate an attractor trajectory"""
+    """Base class for a Parameterized object that can evaluate an attractor trajectory."""
 
     x = param.Number(0, softbounds=(-2, 2), doc='Starting x value', precedence=-1)
     y = param.Number(0, softbounds=(-2, 2), doc='Starting y value', precedence=-1)
@@ -65,8 +67,8 @@ class Attractor(param.Parameterized):
 
     __abstract = True
 
-    def __call__(self, n, x=None, y=None):
-        """Return a dataframe with *n* points"""
+    def __call__(self, n: int, x: float | None = None, y: float | None = None) -> pd.DataFrame:
+        """Return a dataframe with `n` points."""
         if x is not None:
             self.x = x
         if y is not None:
@@ -74,12 +76,14 @@ class Attractor(param.Parameterized):
         args = [getattr(self, p) for p in self.signature()]
         return trajectory(self.fn, *args, n=n)
 
-    def compute(self, xlim=(-2, 2), ylim=(-2, 2), n_points=1000000):
-        """Return a dataframe with *n* points"""
+    def compute(
+        self, xlim: tuple[float, float] = (-2, 2), ylim: tuple[float, float] = (-2, 2), n_points: int = 1000000
+    ) -> list[pd.DataFrame]:
+        """Return a list of dataframes with *n* points"""
         args = [getattr(self, p) for p in self.signature()]
         global partial_fn  # hack to ensure multiprocessing works
 
-        def partial_fn(x, y):
+        def partial_fn(x:ArrayLike, y:ArrayLike) -> NDArray:
             """Partial version of attractor equation with only (x,y) arguments."""
             return self.fn(x, y, *args[2:])
 
@@ -88,7 +92,7 @@ class Attractor(param.Parameterized):
     def vals(self):
         return [self.__class__.name] + [self.colormap] + [getattr(self, p) for p in self.signature()]
 
-    def signature(self):
+    def signature(self) -> list[str]:
         """Returns the calling signature expected by this attractor function"""
         return list(inspect.signature(self.fn).parameters.keys())[:-1]
 
@@ -263,7 +267,7 @@ class ParameterSets(param.Parameterized):
 
         self._load()
 
-        self.attractors = {k: v(name=f'{k} parameters') for k, v in sorted(concrete_descendents(Attractor).items())}
+        self.attractors:dict[str,Attractor] = {k: v(name=f'{k} parameters') for k, v in sorted(concrete_descendents(Attractor).items())}
         # load first set of parameters for each kind of attractors
         for k in self.attractors:
             self.attractor(k, *self.args(k)[0])
@@ -302,8 +306,8 @@ class ParameterSets(param.Parameterized):
     def args(self, name):
         return [v[1:] for v in self.param.example.objects if v[0] == name]
 
-    def attractor(self, name, *args):
-        """Factory function to return an Attractor object with the given name and arg values"""
+    def attractor(self, name:str, *args) -> Attractor:
+        """Factory function to return an Attractor object with the given name and arg values."""
         attractor = self.attractors[name]
         fn_params = ['colormap', *attractor.signature()]
         attractor.param.update(**dict(zip(fn_params, args, strict=True)))
