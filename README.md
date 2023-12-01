@@ -1,6 +1,16 @@
 # Attractors 2023
 
 <img src="https://raw.githubusercontent.com/jobar8/attractors2023/master/docs/assets/images/panel_screenshot.png" alt="Attractors Panel" width="800" role="img">
+
+<br>
+
+[![Code style: Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Code style: flake8](https://img.shields.io/badge/code%20style-flake8-456789.svg)](https://github.com/psf/flake8)
+[![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg)](https://www.python.org/downloads/release/python-360/)
+[![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-360/)
+[![CI - Test](https://github.com/jobar8/attractors2023/actions/workflows/test.yml/badge.svg)](https://github.com/jobar8/attractors2023/actions/workflows/test.yml) 
+
 -----
 
 **Table of Contents**
