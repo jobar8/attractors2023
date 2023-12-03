@@ -33,4 +33,4 @@ jobs:
       run: pip install --upgrade hatch
 
     - name: Build documentation
-      run: hatch -v run docs:build
+      run: hatch -v run docs:html
