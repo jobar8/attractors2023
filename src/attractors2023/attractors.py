@@ -2,6 +2,7 @@
 Support for working with a family of attractor equations (https://en.wikipedia.org/wiki/Attractor#Strange_attractor)
 
 Each attractor has:
+
 - Executable Python code for calculating trajectories, optimized using Numba (numba.pydata.org)
 - Readable equations displayable with KaTeX
 - Examples of interesting patterns stored in a separate attractors.yml file
@@ -13,14 +14,16 @@ https://github.com/holoviz-topics/examples/blob/main/attractors/attractors.py
 and slightly modified by Joseph Barraud to fit the requirements of this project (attractors2023).
 
 Changes include:
+
 - linting and formatting with Ruff
 - set data folder relative to this file
 - rename attractor classes using CapWords convention (Fractal_Dream -> FractalDream)
-- use 'item_type' instead of 'class_' attribute on 'param.List'
-- use '.param.update' instead of 'set_param' on 'attractor.param'
-- rename `.sig()` method `.signature()`
-- use `np.random.default_rng()`
-- move `trajectory_coords()` and `trajectory()` functions to maths.py module
+- use ``item_type`` instead of ``class_`` attribute in ``param.List()``
+- use ``.param.update()`` instead of ``set_param()`` in ``attractor.param``
+- rename ``.sig()`` method ``.signature()``
+- use ``np.random.default_rng()`` instead of ``numpy.random.seed()``
+- move ``trajectory_coords()`` and ``trajectory()`` functions to new ``maths.py`` module
+
 """
 import inspect
 from pathlib import Path

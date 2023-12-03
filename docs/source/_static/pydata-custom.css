@@ -1,0 +1,4 @@
+/*Tweaks for the Pydata default CSS*/
+
+/*More space between H1s and signatures in API reference*/
+h1 { margin-bottom: 40px; }
