@@ -4,9 +4,9 @@ This is a direct conversion to a simple script of the panel notebook available h
 https://github.com/holoviz-topics/examples/blob/main/attractors/attractors_panel.ipynb
 
 The app can be launched with:
-> panel serve --show src/attractors2023/attractors_panel.py
 
-Also available online for comparison at https://attractors.pyviz.demo.anaconda.com/attractors_panel
+    > panel serve --show src/attractors2023/attractors_explorer.py
+
 """
 from typing import Generator
 
