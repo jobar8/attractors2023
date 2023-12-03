@@ -44,7 +44,7 @@ cover/
 *.pot
 
 # Sphinx documentation
-docs/_build/
+docs/source/_autosummary
 
 # Jupyter Notebook
 .ipynb_checkpoints
