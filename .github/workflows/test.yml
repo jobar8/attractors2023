@@ -43,4 +43,4 @@ jobs:
     #   run: hatch fmt --check
 
     - name: Run tests
-      run: hatch run cov
+      run: hatch run test
