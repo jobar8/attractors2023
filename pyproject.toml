@@ -61,6 +61,31 @@ style = ["ruff {args:.}", "black --check --diff {args:.}"]
 fmt = ["black {args:.}", "ruff --fix {args:.}", "style"]
 all = ["style", "typing"]
 
+[tool.hatch.envs.docs]
+template = "docs" # disable inheritance
+dependencies = [
+  "sphinx==7.0.1",
+  "pydata-sphinx-theme",
+  "sphinx-autodoc-typehints",
+  "numpydoc==1.6.0",
+  "sphinxcontrib-mermaid",
+  "myst-parser",
+  "sphinx-click",
+  "pydocstringformatter",
+]
+
+[tool.hatch.envs.docs.scripts]
+clean = [
+  "rm -rf docs/build/html",
+  "rm -rf docs/build/doctrees",
+  "rm -rf docs/build/linkcheck",
+  "rm -rf docs/source/_autosummary",
+]
+html = "sphinx-build -b html docs/source docs/build/html"
+linkcheck = "sphinx-build -b linkcheck docs/source docs/build/linkcheck"
+preview = ["html", "firefox docs/build/html/reference_index.html"]
+format = "pydocstringformatter src/attractors2023"
+
 [tool.black]
 target-version = ["py310"]
 line-length = 120
