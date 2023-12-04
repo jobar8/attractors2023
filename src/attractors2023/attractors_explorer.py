@@ -8,38 +8,23 @@ The app can be launched with:
     > panel serve --show src/attractors2023/attractors_explorer.py
 
 """
-from typing import Generator
-
-import datashader as ds
 import numpy as np
-import pandas as pd
 import panel as pn
 import param
 from colorcet import palette
-from datashader import transfer_functions as tf
-from datashader.colors import inferno, viridis
 from panel.layout import HSpacer
 from panel.pane import LaTeX
 
 from attractors2023 import attractors as at
+from attractors2023.shared import render_attractor
 
 RNG = np.random.default_rng(12)
 
 pn.extension('katex')
 pn.config.throttled = True
 
-palette['viridis'] = viridis
-palette['inferno'] = inferno
+
 params = at.ParameterSets(name='Attractors')
-
-
-def render_attractor(
-    trajectory: pd.DataFrame, plot_type: str = 'points', cmap: list = palette['inferno'], size: int = 700
-) -> Generator:
-    """Render attractor's trajectory into an image using datashader."""
-    cvs = ds.Canvas(plot_width=size, plot_height=size)
-    agg = getattr(cvs, plot_type)(trajectory, 'x', 'y', agg=ds.count())
-    yield tf.shade(agg, cmap=cmap)
 
 
 class AttractorsExplorer(param.Parameterized):

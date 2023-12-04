@@ -10,30 +10,21 @@ The app can be launched with:
 Also available online for comparison at https://attractors.pyviz.demo.anaconda.com/attractors_panel
 """
 
-import datashader as ds
-import pandas as pd
 import panel as pn
 import param
 from colorcet import palette
-from datashader import transfer_functions as tf
-from datashader.colors import inferno, viridis
 from panel.layout import HSpacer
 from panel.pane import LaTeX
 from panel.widgets import DiscretePlayer
 
 from attractors2023 import attractors as at
+from attractors2023.shared import render_attractor
 
 pn.extension('katex')
 
-palette['viridis'] = viridis
-palette['inferno'] = inferno
 params = at.ParameterSets(name='Attractors')
 
 
-def datashade(df: pd.DataFrame, plot_type: str = 'points', cmap: list = palette['inferno'], size: int = 700):
-    cvs = ds.Canvas(plot_width=size, plot_height=size)
-    agg = getattr(cvs, plot_type)(df, 'x', 'y', agg=ds.count())
-    return tf.shade(agg, cmap=cmap)
 
 
 class AttractorsViewer(param.Parameterized):
@@ -55,7 +46,7 @@ class AttractorsViewer(param.Parameterized):
 
     @param.depends('attractor_type.param', 'plot_type', 'n')
     def view(self):
-        return datashade(self.attractor_type(n=self.n), self.plot_type, palette[self.attractor_type.colormap][::-1])
+        return render_attractor(self.attractor_type(n=self.n), self.plot_type, palette[self.attractor_type.colormap][::-1])
 
     @param.depends('attractor_type')
     def equations(self):
