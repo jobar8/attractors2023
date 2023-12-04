@@ -12,6 +12,8 @@ Attractors 2023 Documentation
    Home Page <self>
    Reference <_autosummary/attractors2023>
 
+.. image:: _static/assets/images/panel_screenshot.png
+
 This project, *Attractors 2023*, has two objectives:
 
 - to provide an updated version of the original dashboard
